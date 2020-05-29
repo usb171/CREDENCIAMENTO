@@ -1,0 +1,129 @@
+{% load static %}
+
+{% block extracss %}
+<style>
+       @media only screen  and (min-width: 200px) and (max-width: 700px) {
+            #link_footer {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+		}
+</style>
+{% endblock %}
+
+
+<footer id="footer" class="dark">
+    <div class="container">
+        <div class="footer-widgets-wrap clearfix" style="padding: 10px 0px 0px 17px;">
+            <div class="col_two_third">
+                <div class="widget clearfix">
+                    <div class="row">
+                        {% for casa in rodape %}
+                        {% for key, values in casa.items %}
+                        <div class="col-lg-3 col-6 bottommargin-sm" style="padding: 0px 0px 0px 0px;">
+                            <ul>
+                                <li id="link_footer"><a class="title-footer">{{key}}</a></li>
+                                {% for post in values %}
+                                {% if post.linkExterno %}
+                                <li id="link_footer"><a href="{{post.linkExterno}}" target="_blank">&ensp;{{post}}</a></li>
+                                {% else %}
+                                <li id="link_footer"><a href="../../../../../../{{post.slug}}">&ensp;{{post}}</a></li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col_one_third col_last">
+                <div class="widget clear-bottommargin-sm clearfix">
+                    <div class="row">
+                        <div class="col-lg-12" style="margin-bottom: 20px !important;">
+                            <div class="footer-big-contacts footer-big-contacts">
+                                SAC: (86) 3229-5056
+                            </div>
+                        </div>
+                        <div class="col-lg-12" style="margin-bottom: 20px !important;">
+                            <div class="footer-big-contacts footer-big-contacts">
+                                atendimento@fiepi.com.br
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget subscribe-widget clearfix">
+                    <div class="row">
+                        <div class="col-lg-4 clearfix bottommargin-sm" style="max-width: 27.333333%;">
+                            <a href="https://www.facebook.com/sistemafiepi/" target="_blank"
+                               class="social-icon si-dark si-colored si-facebook nobottommargin"
+                               style="margin-right: 10px;">
+                                <i class="icon-facebook"></i>
+                                <i class="icon-facebook"></i>
+                            </a>
+                            <a href="https://www.facebook.com/sistemafiepi/" target="_blank">
+                                <small style="display: block; margin-top: 3px;"><strong>Curta nossa</strong><br>página
+                                    no Facebook
+                                </small>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 clearfix bottommargin-sm" style="max-width: 27.333333%;">
+                            <a href="https://www.instagram.com/sistemafiepi/" target="_blank"
+                               class="social-icon si-dark si-colored si-instagram nobottommargin"
+                               style="margin-right: 10px;">
+                                <i class="icon-instagram"></i>
+                                <i class="icon-instagram"></i>
+                            </a>
+                            <a href="https://www.instagram.com/sistemafiepi/" target="_blank">
+                                <small style="display: block; margin-top: 3px;"><strong>Siga-nos</strong><br>no
+                                    Instagram
+                                </small>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 clearfix bottommargin-sm" style="max-width: 24.333333%;">
+                            {% if mobile %}
+                                <a href="https://api.whatsapp.com/send?phone=5586981678944" target="_blank"
+                                   class="social-icon si-dark si-colored si-facebook nobottommargin"
+                                   style="margin-right: 10px;">
+                                    <i class="icon-whatsapp"></i>
+                                    <i class="icon-whatsapp"></i>
+                                </a>
+                                <a href="https://api.whatsapp.com/send?phone=5586981678944" target="_blank">
+                                    <small style="display: block; margin-top: 3px;">
+                                        <strong>Dúvidas</strong><br>
+                                        Whatsapp
+                                    </small>
+                                </a>
+                            {% else %}
+                                <a href="https://web.whatsapp.com/send?phone=5586981678944" target="_blank"
+                                   class="social-icon si-dark si-colored si-facebook nobottommargin"
+                                   style="margin-right: 10px;">
+                                    <i class="icon-whatsapp"></i>
+                                    <i class="icon-whatsapp"></i>
+                                </a>
+                                <a href="https://web.whatsapp.com/send?phone=5586981678944" target="_blank">
+                                    <small style="display: block; margin-top: 3px;">
+                                        <strong>Dúvidas</strong><br>
+                                        Whatsapp
+                                    </small>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="copyrights" style="padding: 10px 0px 10px 0px;">
+        <div class="container clearfix">
+            <div class="col_half">
+                Copyrights &copy; 2020 Todos os direitos reservados FIEPI.<br>
+            </div>
+            <!--					<div class="col_half col_last tright">-->
+            <!--						<div class="copyrights-menu copyright-links clearfix">-->
+            <!--							<a href="#">HOME</a>/<a href="#">FIEPI</a>/<a href="#">SESI</a>/<a href="#">SENAI</a>/<a href="#">IEL</a>/<a href="#">SINDICATOS</a>-->
+            <!--						</div>-->
+            <!--					</div>-->
+        </div>
+    </div>
+</footer>

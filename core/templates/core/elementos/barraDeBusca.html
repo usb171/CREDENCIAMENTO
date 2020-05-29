@@ -1,0 +1,24 @@
+{% load static %}
+<nav class="navbar navbar-expand-md navbar-color-fiepi fixed-top  border-bottom">
+    <div class="row justify-content-md-center topo_buscar_curso">
+        <div class="input-group container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'assets/site1/images/logo/logo4.png'%}">
+            </a>
+            <input type="search" id="searchInput" placeholder="Olá, qual curso você procura ?"
+                   aria-describedby="button-addon5" class="form-control pontos" autofocus>
+            <div class="input-group-append">
+                <button id="button-addon5" type="submit" class="btn btn-primary" style="font-size: 0.98rem;"><i
+                        class="icon-line-search"></i></button>
+            </div>
+        </div>
+    </div>
+    <div id="search_box_cover">
+        <div style="width:0;height:0;">
+            <div id="search_suggest_box">
+                <div id="search_suggest_list">
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

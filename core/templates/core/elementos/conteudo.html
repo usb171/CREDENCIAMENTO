@@ -1,0 +1,82 @@
+
+<div class="content-wrap" style="padding: 40px 0;">
+    <div class="container clearfix">
+
+        <img src="/static/assets/site1/images/logo/fiepi_top.jpeg">
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row buscar-row">
+                    <div class="col-md-12 row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="id_select_ano">Ano</label>
+                                <select class="form-control"
+                                        id="id_select_ano" onchange="buscarEditais();">
+                                    <option value="2020">2020</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="id_select_categoria">Categoria</label>
+                                <select class="form-control"
+                                        id="id_select_categoria" onchange="buscarEditais();">
+                                    <option value="2">Pessoa Física/Jurídica</option>
+                                    <option value="0">Pessoa Física</option>
+                                    <option value="1">Pessoa Jurídica</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-top: 5px; padding-bottom: 5px;">
+                {% for edital in editais%}
+                <div class="edital content-wrap" onclick="abrirDescricaoEdital({{edital.id}})">
+                    <div class="container clearfix">
+                        <div class="card">
+                            <div class="card-header">
+                                Edital N° {{edital.codigo}}
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <span>Categoria:</span> {{edital.get_categoria}}
+                                    <br>
+                                    <span>Andamento:</span> {{edital.get_status}}
+                                    <br>
+                                    <span>Título:</span> {{edital.titulo}}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="descricao_modal" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="id_titulo_descricao_edital">Descrição Atendimento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="id_modal_body_edital_descricao">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
