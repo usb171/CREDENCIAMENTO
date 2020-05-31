@@ -425,3 +425,26 @@ a {
     margin: 0px -25px;
     text-transform: uppercase;
 }
+
+.edital-descricao{
+    text-transform: uppercase;
+    text-align: justify;
+}
+
+.l-1 {
+    background: #0086fc26;
+    padding: 5px 5px;
+}
+
+.l-2 {
+    background: #f5e8f0;
+    padding: 5px 5px;
+}
+
+.l-1 span {
+    color: #0058b6;
+}
+
+.l-2 span {
+    color: #0058b6;
+}

@@ -35,3 +35,18 @@ class Edital(models.Model):
 
     def get_status(self):
         return STATUS_EDITAL[int(self.status)][1]
+
+
+class Documento(models.Model):
+    ativo = models.BooleanField(default=True)
+    ordem = models.IntegerField(null=True, default=1)
+    titulo = models.CharField(max_length=250, verbose_name='Título', blank=False, null=True)
+    documento = models.FileField(verbose_name="Documento", upload_to='documento_publico/%Y/%m/%d', blank=False, null=True)
+    edital = models.ForeignKey(Edital, verbose_name='Edital', on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        verbose_name = 'Documento'
+        verbose_name_plural = 'Documentos'
+
+    def get_absolute_url(self):
+        return self.documento.url

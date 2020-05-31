@@ -53,5 +53,17 @@ const abrirDescricaoEdital = (id) => {
                 EasyLoading.hide();
             }
     });
+};
 
+const novaInscricao = (id) => {
+    $.ajax({
+        type: "GET",
+        url: "nova_inscricao_edital_ajax?id=" + id,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data) {
+            console.log(data)
+        },
+        error: function(data) {}
+    });
 };

@@ -17,6 +17,9 @@ class Core:
 
 class CoreAjax:
 
-    def get_edital_ajax(request):
+    def get_edital(request):
         descricao_html = get_descricao_edital_html(request)
         return JsonResponse({'descricao': descricao_html})
+
+    def nova_inscricao_edital(request):
+        return JsonResponse({'inscricao': True})
