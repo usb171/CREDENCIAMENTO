@@ -26,4 +26,5 @@ admin.site.site_title = 'Administrador'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
+    path('edital/', include('edital.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

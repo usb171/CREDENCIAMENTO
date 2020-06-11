@@ -9,25 +9,18 @@
         <meta name="description" content="">
         <meta name="author" content="FIEPI">
         <meta name="generator" content="FIEPI 1.0">
-        <link rel="stylesheet" href="{% static '/assets/site1/lib/bootstrap/css/bootstrap.min.css' %}" type="text/css"/>
-
-        <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700|Roboto:300,400,500,700"
-              rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/style.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/swiper.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/construction.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/dark.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/font-icons.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/fonts.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/animate.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/magnific-popup.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/fonts.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/responsive.css' %}" type="text/css"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/colors.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/site1/css/custom.css' %}" type="text/css"/>
-        <link rel="stylesheet" href="{% static '/assets/portal/css/easy-loading.min.css' %}" type="text/css" />
-
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Raleway:300,400,500,600,700|Crete+Round:400i" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/bootstrap-min.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/style-min.css' %}" type="text/css"/>
+		<link rel="stylesheet" href="{% static '/assets/portal/css/swiper.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/dark.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/font-icons.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/animate.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/magnific-popup.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/responsive.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/custom.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static '/assets/portal/css/easy-loading.min.css' %}" type="text/css" />
+	    <link rel="stylesheet" href="{% static 'assets/portal/css/jquery.toast.css' %}" type="text/css" />
 
         {% block extracss %}{% endblock %}
 
@@ -35,17 +28,17 @@
 
     <body class="stretched device-xl top-search-open">
 
-        <script src="{% static '/assets/site1/lib/jquery-3.3.1.slim.min.js' %}"></script>
+	    <script src="{% static '/assets/portal/js/jquery.js' %}"></script>
 
         {% block body %}{% endblock %}
 
-        <script src="{% static '/assets/site1/lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static '/assets/site1/js/jquery.js' %}"></script>
-        <script src="{% static '/assets/site1/js/plugins.js' %}"></script>
-        <script src="{% static '/assets/site1/js/functions.js' %}"></script>
-        <script src="{% static '/assets/portal/js/easy-loading.min.js' %}"></script>
-
-        <script src="{% static '/assets/site1/js/edital.js' %}"></script>
+        <script src="{% static '/assets/portal/js/plugins.js' %}"></script>
+		<script src="{% static '/assets/portal/js/functions.js' %}"></script>
+		<script src="{% static '/assets/portal/js/easy-loading.min.js' %}"></script>
+		<script src="{% static '/assets/portal/js/jquery.mask.js' %}"></script>
+        <script src="{% static '/assets/portal/js/jquery.toast.js' %}"></script>
+        <script src="{% static '/assets/portal/js/edital.js' %}"></script>
+        <script src="{% static '/assets/portal/js/usuario.js' %}"></script>
 
         {% block extrajs %}{% endblock %}
 

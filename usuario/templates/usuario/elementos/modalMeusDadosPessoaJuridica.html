@@ -1,0 +1,173 @@
+<div class="modal fade" id="modal_meus_dados" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Meus Dados</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="id_form_meus_dados_pessoa_fisica" method="POST">
+                            {% csrf_token %}
+                            <input id="comando" name="comando" value="#editar#" hidden>
+                            <input name="categoria_pessoa" value="1" hidden>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="email">Email</label>
+                                    <input type="text" class="form-control" id="email" value="{{usuario.email}}"
+                                           disabled>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="cnpj">CNPJ</label>
+                                    <input type="text" class="form-control" data-mask="99.999.999/9999-99"
+                                           data-mask-selectonfocus="true" maxlength="18" autocomplete="off" disabled
+                                           value="{{usuario.cnpj}}">
+                                </div>
+                            </div>
+
+                            <!--                            <div class="form-row">-->
+                            <!--                                <div class="form-group col-md-6">-->
+                            <!--                                    <label for="senha">Senha</label>-->
+                            <!--                                    <input type="password" class="form-control" id="senha" name="senha" required>-->
+                            <!--                                </div>-->
+                            <!--                                <div class="form-group col-md-6">-->
+                            <!--                                    <label for="csenha">Confirmar Senha</label>-->
+                            <!--                                    <input type="password" class="form-control" id="csenha" name="csenha" required>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="razaoSocial">Razão Social</label>
+                                    <input type="text" class="form-control" id="razaoSocial" name="razao_social"
+                                           value="{{usuario.razao_social}}" required
+                                    >
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="nomeFantasia">Nome Fantasia</label>
+                                    <input type="text" class="form-control" id="nomeFantasia" name="nome_fantasia"
+                                           value="{{usuario.nome_fantasia}}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="cnpj_cpf">CPF do Responsável</label>
+                                    <input type="text" class="form-control" data-mask="999.999.999-99"
+                                           data-mask-selectonfocus="true" value="{{usuario.cnpj_cpf}}" disabled>
+                                </div>
+                                <div class="form-group col-md-8">
+                                    <label for="cnpj_nome">Nome do Responsável</label>
+                                    <input type="text" class="form-control" id="cnpj_nome"
+                                           name="cnpj_nome" value="{{usuario.cnpj_nome}}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="sexo">Sexo do Responsável</label>
+                                    <input type="text" id="sexo" name="sexo" hidden>
+                                    <select id="select_sexo" class="form-control"
+                                            onchange=" $('#sexo').val($(this).val())">
+                                        <option value="0">Masculino</option>
+                                        <option value="1">Faminino</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="telefone">Telefone</label>
+                                    <input type="text" class="form-control" data-mask="(99) 99999-9999"
+                                           data-mask-selectonfocus="true" id="telefone" name="telefone"
+                                           value="{{usuario.telefone}}"
+                                    >
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="estado">Estado</label>
+                                    <input type="text" id="estado" name="estado" hidden>
+                                    <select id="select_estado" class="form-control"
+                                            onchange=" $('#estado').val($(this).val())">
+                                        <option value="">Selecione</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espirito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="cidade">Cidade</label>
+                                    <input type="text" class="form-control" id="cidade" name="cidade"
+                                           value="{{usuario.cidade}}">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="endereco">Endereço</label>
+                                    <input type="text" class="form-control" id="endereco" name="endereco"
+                                           value="{{usuario.endereco}}">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="numero">Número</label>
+                                    <input type="text" class="form-control" id="numero" name="numero"
+                                           value="{{usuario.numero}}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" class="form-control" id="bairro" name="bairro"
+                                           value="{{usuario.bairro}}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="CEP">CEP</label>
+                                    <input type="text" class="form-control" id="CEP" name="cep" value="{{usuario.cep}}">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12" style="text-align: end;">
+                                    <button type="submit" id="button_enviar"
+                                            class="button button-rounded button-reveal button-blue"><i
+                                            class="icon-send"></i> <span
+                                            style="color: #fff;">Salvar Meus Dados</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#select_sexo").val('{{usuario.sexo}}').change();
+    $("#select_estado").val('{{usuario.estado}}').change();
+</script>

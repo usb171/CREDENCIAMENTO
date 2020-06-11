@@ -1,0 +1,53 @@
+<div class="card">
+    <div class="card-header">
+        <div class="row buscar-row">
+            <div class="col-md-12 row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="id_select_ano">Ano</label>
+                        <select class="form-control"
+                                id="id_select_ano" onchange="buscarEditais();">
+                            <option value="%">Todos os anos</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="id_select_categoria">Categoria</label>
+                        <select class="form-control"
+                                id="id_select_categoria" onchange="buscarEditais();">
+                            <option value="2">Pessoa Física/Jurídica</option>
+                            <option value="0">Pessoa Física</option>
+                            <option value="1">Pessoa Jurídica</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% if user.is_authenticated %}
+        <div style="margin: 5px;">
+            <h5><span>Status</span>: On-line</h5>
+            <h5><span>Usuário</span>: {{user}}</h5>
+        </div>
+        <a href="{% url 'minhasInscricoes' %}" class="button button-3d button-rounded button-blue"><i
+                class="icon-book3"></i>Minhas Inscrições</a>
+        <a href="{% url 'logout' %}" class="button button-3d button-rounded button-blue"><i class="icon-line-cross"></i>Sair</a>
+        {% else %}
+        <div style="margin: 5px;">
+            <h5><span>Status</span>: Off-line</h5>
+            <h5><span>Mensagem</span>: Realize seu login!</h5>
+        </div>
+        <a href="#" onclick="$('#login_modal').modal('show');" class="button button-3d button-rounded button-blue"><i
+                class="icon-user2"></i>Entrar</a>
+        <a href="#" onclick="$('#id_modal_novo_cadastro').modal('show');"
+           class="button button-3d button-rounded button-blue"><i class="icon-files"></i>Novo Cadastro</a>
+        {% endif %}
+    </div>
+</div>

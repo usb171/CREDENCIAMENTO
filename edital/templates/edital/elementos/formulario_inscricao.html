@@ -1,0 +1,24 @@
+<div class="content-wrap" style="padding: 40px 0;">
+    <div class="container clearfix">
+        <div class="card">
+            <div class="card-header top" style="font-size: large;">
+                <img src="/static/assets/site1/images/logo/fiepi_top.jpeg">
+                <!--                <img src="https://tpc.googlesyndication.com/simgad/734441549151157331" alt="this slowpoke moves"  width="250" alt="404 image"/>-->
+            </div>
+
+            <div class="card-body">
+                <a href="{% url 'index' %}" class="button button-3d button-rounded button-blue"><i class="icon-list"></i>Editais</a>
+                <a href="{% url 'minhasInscricoes' %}" class="button button-3d button-rounded button-blue"><i
+                        class="icon-book3"></i>Minhas
+                    Inscrições</a>
+                <a href="{% url 'logout' %}" class="button button-3d button-rounded button-blue"><i
+                        class="icon-user2"></i>Sair</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body" style="margin-bottom: -33px;">
+                {{edital_html | safe }}
+            </div>
+        </div>
+    </div>
+</div>

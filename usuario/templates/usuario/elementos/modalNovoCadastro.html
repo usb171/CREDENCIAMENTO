@@ -1,0 +1,191 @@
+<div class="modal fade" id="id_modal_novo_cadastro" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Novo Cadastro</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="id_modal_body_novo_cadastro">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="id_form_novoUsuario" method="POST">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="select_categora_pessoa">Categoria</label>
+                                    <input type="text" id="categoria_pessoa" name="categoria_pessoa" hidden>
+                                    <select id="select_categora_pessoa" class="form-control"
+                                            onchange=" $('#categoria_pessoa').val($(this).val())">
+                                        <option value="">Selecione uma categoria</option>
+                                        <option value="0">Pessoa Física</option>
+                                        <option value="1">Pessoa Jurídica</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="id_campos_novo_cadastro">
+                                <input id="comando" name="comando" value="#criar#" hidden>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="nome">Nome Completo</label>
+                                        <input type="text" class="form-control" id="nome"
+                                               name="nome">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="cemail">Confirmar Email</label>
+                                        <input type="cemail" class="form-control" id="cemail" name="cemail" required>
+                                    </div>
+                                </div>
+
+<!--                                <div class="form-row">-->
+<!--                                    <div class="form-group col-md-6">-->
+<!--                                        <label for="senha">Senha</label>-->
+<!--                                        <input type="password" class="form-control" id="senha" name="senha" required>-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group col-md-6">-->
+<!--                                        <label for="csenha">Confirmar Senha</label>-->
+<!--                                        <input type="password" class="form-control" id="csenha" name="csenha" required>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="cpf">CPF</label>
+                                        <input type="text" class="form-control" data-mask="999.999.999-99"
+                                               data-mask-selectonfocus="true" id="cpf" name="cpf">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="razaoSocial">Razão Social</label>
+                                        <input type="text" class="form-control" id="razaoSocial" name="razao_social"
+                                        >
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="nomeFantasia">Nome Fantasia</label>
+                                        <input type="text" class="form-control" id="nomeFantasia" name="nome_fantasia"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-row" id="id_campos_pessoa_fisica">
+                                    <div class="form-group col-md-4">
+                                        <label for="cnpj">CNPJ</label>
+                                        <input type="text" class="form-control" data-mask="99.999.999/9999-99"
+                                               data-mask-selectonfocus="true" id="cnpj" name="cnpj" maxlength="18"
+                                               autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="cnpj_responsavel">CPF Responsável</label>
+                                        <input type="text" class="form-control" data-mask="999.999.999-99"
+                                               data-mask-selectonfocus="true" id="cnpj_responsavel" name="cnpj_cpf">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="nomeResponsavel">Nome Responsável</label>
+                                        <input type="text" class="form-control" id="nomeResponsavel"
+                                               name="cnpj_nome">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="sexo">Sexo</label>
+                                        <input type="text" id="sexo" name="sexo" hidden>
+                                        <select id="select_sexo" class="form-control"
+                                                onchange=" $('#sexo').val($(this).val())">
+                                            <option value="0">Masculino</option>
+                                            <option value="1">Faminino</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="telefone">Telefone</label>
+                                        <input type="text" class="form-control" data-mask="(99) 99999-9999"
+                                               data-mask-selectonfocus="true" id="telefone" name="telefone"
+                                        >
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="estado">Estado</label>
+                                        <input type="text" id="estado" name="estado" hidden>
+                                        <select id="select_estado" class="form-control"
+                                                onchange=" $('#estado').val($(this).val())">
+                                            <option value="">Selecione</option>
+                                            <option value="AC">Acre</option>
+                                            <option value="AL">Alagoas</option>
+                                            <option value="AP">Amapá</option>
+                                            <option value="AM">Amazonas</option>
+                                            <option value="BA">Bahia</option>
+                                            <option value="CE">Ceará</option>
+                                            <option value="DF">Distrito Federal</option>
+                                            <option value="ES">Espirito Santo</option>
+                                            <option value="GO">Goiás</option>
+                                            <option value="MA">Maranhão</option>
+                                            <option value="MS">Mato Grosso do Sul</option>
+                                            <option value="MT">Mato Grosso</option>
+                                            <option value="MG">Minas Gerais</option>
+                                            <option value="PA">Pará</option>
+                                            <option value="PB">Paraíba</option>
+                                            <option value="PR">Paraná</option>
+                                            <option value="PE">Pernambuco</option>
+                                            <option value="PI">Piauí</option>
+                                            <option value="RJ">Rio de Janeiro</option>
+                                            <option value="RN">Rio Grande do Norte</option>
+                                            <option value="RS">Rio Grande do Sul</option>
+                                            <option value="RO">Rondônia</option>
+                                            <option value="RR">Roraima</option>
+                                            <option value="SC">Santa Catarina</option>
+                                            <option value="SP">São Paulo</option>
+                                            <option value="SE">Sergipe</option>
+                                            <option value="TO">Tocantins</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-2">
+                                        <label for="cidade">Cidade</label>
+                                        <input type="text" class="form-control" id="cidade" name="cidade">
+                                    </div>
+                                    <div class="form-group col-md-10">
+                                        <label for="endereco">Endereço</label>
+                                        <input type="text" class="form-control" id="endereco" name="endereco">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="numero">Número</label>
+                                        <input type="text" class="form-control" id="numero" name="numero">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="bairro">Bairro</label>
+                                        <input type="text" class="form-control" id="bairro" name="bairro">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="CEP">CEP</label>
+                                        <input type="text" class="form-control" id="CEP" name="cep">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12" style="text-align: end;">
+                                        <button type="submit" id="button_enviar"
+                                                class="button button-rounded button-reveal button-blue"><i
+                                                class="icon-send"></i> <span
+                                                style="color: #fff;">Salvar Cadastro</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

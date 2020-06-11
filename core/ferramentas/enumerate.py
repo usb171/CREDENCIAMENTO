@@ -50,3 +50,13 @@ CATEGORIA_EDITAL = (
     ('1', 'Pessoa Jurídica'),
     ('2', 'Pessoa Física/Jurídica')
 )
+
+CATEGORIA_PESSOA = (
+    ('0', 'Pessoa Física'),
+    ('1', 'Pessoa Jurídica'),
+)
+
+SEXO = {
+    ('0', 'Masculino'),
+    ('1', 'Feminino'),
+}
