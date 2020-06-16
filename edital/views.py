@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .ferramentas.buscas import *
 from core.ferramentas.buscas import *
+from .ferramentas.funcoes import *
 
 class Edital:
 
@@ -16,6 +17,10 @@ class Edital:
 
         if request.method == 'GET':
             return render(request=request, template_name=template_name, context=context)
+        elif request.method == 'POST':
+            inscrever(request)
+            return render(request=request, template_name=template_name, context=context)
+
 
     @login_required(login_url='index')
     def minhasInscricoes(request):

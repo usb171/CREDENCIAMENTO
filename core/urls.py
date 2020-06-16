@@ -15,4 +15,6 @@ urlpatterns = [
     path('buscarEmailAjax', CoreAjax.buscarEmail, name='buscarEmailAjax'),
     path('buscarCpfAjax', CoreAjax.buscarCpf, name='buscarCpfAjax'),
     path('buscarCnpjAjax', CoreAjax.buscarCnpj, name='buscarCnpjAjax'),
+
+    path('getBlocosCamposArquivosServicosAjax', CoreAjax.get_blocos_campos_arquivos_servicos, name='getBlocosCamposArquivosServicosAjax'),
 ]

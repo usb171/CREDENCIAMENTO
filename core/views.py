@@ -61,3 +61,7 @@ class CoreAjax:
     def validar_login_usuario(request):
         flag_login = request.user.is_authenticated
         return JsonResponse({'login_flag': flag_login})
+
+    def get_blocos_campos_arquivos_servicos(request):
+        blocos = get_blocos_campos_arquivos_servicos(request)
+        return JsonResponse({'blocos': blocos})

@@ -1,21 +1,4 @@
 
-//const carregarFiltros = () => {
-//    let select_ano = $("#id_select_ano");
-//    let select_categoria = $("#id_select_categoria");
-//
-//    $.ajax({
-//        type: "GET",
-//        url: "/API_SGE_CARREGAR_FILTROS",
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        success: function(data) {
-//            select_ano.html(data.areas);
-//            select_categoria.html(data.cidades);
-//        },
-//        error: function(data) {}
-//    });
-//};
-
 const buscarEditais = (carregar=true) => {
     let select_ano = $("#id_select_ano").val();
     let select_categoria = $("#id_select_categoria").val();
@@ -78,7 +61,6 @@ const validar_login_usuario_redirecionar_inscricao = (id) => {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-            console.log(data)
             if (data.login_flag == false){
                 $("#descricao_modal").modal('hide');
                 $("#login_modal").modal('show');
@@ -91,7 +73,47 @@ const validar_login_usuario_redirecionar_inscricao = (id) => {
     });
 };
 
-//$('#login_modal').on('hidden.bs.modal', function () {
-//      $("#descricao_modal").modal('show');
-//});
+$("#id_servicos_select2").select2({
+    width: '100%',
+    placeholder: "Selecione um ou mais serviços",
+    closeOnSelect: false,
+    "language": {
+        "noResults": function(){
+           return "Edital sem serviços";
+        }
+    },
+});
 
+$('#id_servicos_select2').on('select2:select', function (e) {
+   let ids_selected = $(this).select2("val");
+   id_edital = getUrlVars().id;
+   get_bloco_campos_arquivos_servico(ids_selected, id_edital);
+});
+
+$('#id_servicos_select2').on('select2:unselect', function (e) {
+   let ids_selected = $(this).select2("val");
+   id_edital = getUrlVars().id;
+   get_bloco_campos_arquivos_servico(ids_selected, id_edital);
+
+});
+
+let get_bloco_campos_arquivos_servico = (ids, id_edital) => {
+   $.ajax({
+        url: "/getBlocosCamposArquivosServicosAjax",
+        data: {'ids_selected': ids.join(), 'id_edital':  id_edital},
+        dataType: 'json',
+        success: function (data) {
+            $("#id_blocos_servicos").html(data.blocos)
+        }
+    });
+};
+
+
+function getUrlVars() {
+    /**
+     * Esta função retorna as variáveis de um URL
+     */
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { vars[key] = value; });
+    return vars;
+}

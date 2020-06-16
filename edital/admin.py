@@ -1,25 +1,37 @@
 from django.contrib import admin
-from .models import Edital, Documento, Requisito, PoloAtuacao, Contratante
+from .models import *
+from core.models import Documento
+
 
 class DocumentoInline(admin.StackedInline):
     model = Documento
     extra = 0
 
-class RequisitoInline(admin.StackedInline):
-    model = Requisito
-    extra = 0
 
-class editalAdmin(admin.ModelAdmin):
+class EditalAdmin(admin.ModelAdmin):
     list_display = ['titulo', 'status', 'data_publicacao', 'inicio_inscricao', 'fim_inscricao']
     list_filter = ['status']
-    inlines = [DocumentoInline, RequisitoInline]
+    filter_horizontal = ('contratante', 'servicos')
+    inlines = [DocumentoInline]
 
-class PoloAtuacaoAdmin(admin.ModelAdmin):
-    list_display = ['nome']
 
-class ContratanteAdmin(admin.ModelAdmin):
-    list_display = ['nome']
 
-admin.site.register(Edital, editalAdmin)
-admin.site.register(PoloAtuacao, PoloAtuacaoAdmin)
-admin.site.register(Contratante, ContratanteAdmin)
+class DocumentoRequisitoInscricaoInline(admin.StackedInline):
+    model = DocumentoRequisitoInscricao
+    extra = 0
+    readonly_fields = ['servico']
+
+
+
+class InscricaoAdmin(admin.ModelAdmin):
+    list_display = ['usuario', 'edital']
+    list_filter = ['status']
+    filter_horizontal = ['servicos']
+    readonly_fields = ['servicos']
+    inlines = [DocumentoRequisitoInscricaoInline]
+
+
+admin.site.register(Edital, EditalAdmin)
+admin.site.register(Inscricao, InscricaoAdmin)
+# admin.site.register(PoloAtuacao, PoloAtuacaoAdmin)
+# admin.site.register(Contratante, ContratanteAdmin)

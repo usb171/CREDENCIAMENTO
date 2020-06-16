@@ -1,7 +1,12 @@
-from edital.models import Edital, Documento, Requisito
+from webbrowser import get
+
+from django.middleware.csrf import get_token
+from edital.models import Edital
+from core.models import Documento, Requisito, PoloAtuacao, Contratante, Servico
+
 from usuario.models import Usuario
-from django.db.models import Q
 from .funcoes import *
+
 
 
 def get_usuario(request):
@@ -129,6 +134,31 @@ def get_editais_html(request):
     return editais_html
 
 
+def get_servicos_edital_html(request, edital):
+    try:
+        servicos = edital.servicos.all()
+        if servicos.exists():
+            select2_html =  '<div class="card mt-4">' \
+                                '<h4 class="card-header"> Selecione os serviços para inscrição </h4>' \
+                                '<div class="card-body">' \
+                                    '<select id="id_servicos_select2" class="select2 select2-lg" multiple="" required>' \
+                                    '{options}' \
+                                    '</select>' \
+                                '</div>' \
+                            '</div>' \
+                            '<div id="id_blocos_servicos"></div>'
+
+            options = ""
+            for servico in servicos:
+                options = options + '<option value="{id}">{titulo}</option>'.format(id=servico.id, titulo=servico)
+
+            return select2_html.format(options=options)
+        else:
+            return ''
+    except Exception as e:
+        return '<h4 style="color:red"> Erro ao gerar serviços do Edital </4>'
+
+
 def get_descricao_edital_html(request):
     try:
         edital = Edital.objects.get(id=request.GET.get('id'))
@@ -187,26 +217,21 @@ def get_descricao_edital_html_2(request):
                '<div class="l-2"><span>Título: </span>{titulo}</div>' \
                '<div class="l-1"><span>Descrição: </span>{descricao}</div>' \
                '<div class="l-2">{documentos}</div>' \
-               '</h4>' \
-               '<h4> Faça o upload dos arquivos requisitados no Edital </h4>' \
-               '{campos_arquivos}'\
-               '{button}'
+               '<form action="" method="post" enctype="multipart/form-data" id="form_inscricao">' \
+                    '<input type="hidden" name="csrfmiddlewaretoken" value="{CSRF}">' \
+                    '{servicos}' \
+                    '{button}' \
+                '</form>' \
 
         button_html = '<div class="row">' \
-                      '<div class="col-md-12 mb-5" style="text-align: end;">' \
-                      '<a href="#" onClick="realizar_inscricao({id})" class="button button-border button-rounded button-fill fill-from-right button-blue">' \
+                      '<div class="col-md-12 mt-4" style="text-align: end;">' \
+                      '<button href="#" class="button button-border button-rounded button-fill fill-from-right button-blue">' \
                       '<span>Finalizar Inscrição</span>' \
-                      '</a>' \
+                      '</button>' \
                       '</div>' \
                       '</div>'
 
-        campos_html = ""
-        for campo_documento in Requisito.objects.filter(edital=edital):
-            campos_html = campos_html + "<div class='form-group l-1'>" \
-                                        "<label for='{id}'>{titulo}</label>" \
-                                        "<input type='file' class='form-control-file' id='{id}'>" \
-                                        "</div>".format(id="campo_documento" + str(campo_documento.id), titulo=campo_documento.titulo)
-
+        servicos = get_servicos_edital_html(request, edital)
 
         documentos_html = ""
         for documento in Documento.objects.filter(edital=edital):
@@ -225,9 +250,52 @@ def get_descricao_edital_html_2(request):
                            descricao=edital.descricao,
                            documentos=documentos_html,
                            button=button_html.format(id=edital.id),
-                           campos_arquivos=campos_html
+                           servicos=servicos,
+                           CSRF=get_token(request)
                            )
 
     except Exception as e:
         print(e)
         return "<h1>Erro ao carregar edital !!</h1>"
+
+
+def get_blocos_campos_arquivos_servicos(request):
+    ids_selecionados = request.GET.get('ids_selected').split(',')
+    id_edital = request.GET.get('id_edital')
+
+    blocos_html = ''
+
+    bloco_html = '<div class="card mt-4">' \
+                    '<h4 class="card-header"> {header} </h4>' \
+                    '<div class="card-body"> {body} </div>' \
+                 '</div>'
+
+    requisito_html = '<div class="card mt-2">' \
+                        '<h4 class="card-header"> {header} </h4>' \
+                        '<div class="card-body"> {body} </div>' \
+                     '</div>'
+
+
+    body_bloco_html = '<div class="input-group">' \
+                    '<input type="file" name="files[{id}]" id="file_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">'\
+                    '<input type="text" id="id_text_file_{id}" class="form-control" value="{nome_arquivo}" readonly="">'\
+                    '<span class="input-group-btn">'\
+                        '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Carregar Arquivo</a>' \
+                    '</span>'\
+                '</div>'
+
+
+    if ids_selecionados[0] is not '' and id_edital is not '':
+        for servico in  Servico.objects.filter(id__in=ids_selecionados):
+            body_servico = ''
+            for requisito in Requisito.objects.filter(servico=servico):
+                body_bloco_requisito = body_bloco_html.format(id=requisito.id,
+                                                    nome_arquivo='',
+                                                    evento_set_nome_arquivo="$('#id_text_file_{id}').val($('#file_{id}')[0].files[0].name);".format(id=requisito.id),
+                                                    evento_abrir_arquivo="$('#file_{id}').trigger('click');".format(id=requisito.id))
+
+                body_servico = body_servico + requisito_html.format(header=requisito.titulo, body=body_bloco_requisito)
+
+            blocos_html = blocos_html + bloco_html.format(header=servico, body=body_servico)
+
+    return blocos_html

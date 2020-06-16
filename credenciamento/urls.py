@@ -19,12 +19,16 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+import private_storage.urls
+
+
 admin.site.site_header = 'Federação das Indústrias do Estado do Piauí'
 admin.site.index_title = 'Credenciamento'
 admin.site.site_title = 'Administrador'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('documento_privado/', include('private_storage.urls')),
     path('', include('core.urls')),
     path('edital/', include('edital.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

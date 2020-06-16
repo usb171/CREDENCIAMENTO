@@ -44,6 +44,21 @@ STATUS_EDITAL = (
     ('3', 'Encerrado'),
 )
 
+STATUS_INSCRICAO = (
+    ('0', 'Em Análise'),
+    ('1', 'Inabilitada'),
+    ('2', 'Habilitada'),
+    ('3', 'Expirada'),
+    ('4', 'Descredenciada'),
+)
+
+STATUS_DOCUMENTO_REQUISITO_INSCRICAO = (
+    ('0', 'Em Análise'),
+    ('1', 'Documento OK'),
+    ('2', 'Documento Vencido'),
+    ('3', 'Documento Ilegível'),
+    ('4', 'Documento Inválido'),
+)
 
 CATEGORIA_EDITAL = (
     ('0', 'Pessoa Física'),

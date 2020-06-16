@@ -51,9 +51,6 @@ $('#id_form_novoUsuario').submit(function(e){
 
 
 $('#id_form_meus_dados_pessoa_fisica').submit(function(e){
-
-    console.log('Aqui');
-
     e.preventDefault();
     $.post("/usuario/editarMeusDados", $(this).serialize(), function(data){
         if (data.status){

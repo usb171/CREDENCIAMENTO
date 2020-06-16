@@ -454,3 +454,8 @@ a {
 h5 span {
     color: #0058b6 !important
 }
+
+
+.card-header {
+    text-transform: uppercase;
+}

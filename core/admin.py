@@ -1,3 +1,24 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+class RequisitoInline(admin.StackedInline):
+    model = Requisito
+    extra = 0
+
+
+class ServicoAdmin(admin.ModelAdmin):
+    list_display = ['titulo', 'polo_atuacao']
+    inlines = [RequisitoInline]
+
+
+class PoloAtuacaoAdmin(admin.ModelAdmin):
+    list_display = ['nome']
+
+
+class ContratanteAdmin(admin.ModelAdmin):
+    list_display = ['nome']
+
+
+admin.site.register(PoloAtuacao, PoloAtuacaoAdmin)
+admin.site.register(Contratante, ContratanteAdmin)
+admin.site.register(Servico, ServicoAdmin)
