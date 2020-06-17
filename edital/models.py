@@ -73,3 +73,6 @@ class DocumentoRequisitoInscricao(models.Model):
 
     def __str__(self):
         return  '{} / {}'.format(self.requisito.titulo, self.servico)
+
+    def get_nome_documento(self):
+        return self.documento.name.split('/')[1]

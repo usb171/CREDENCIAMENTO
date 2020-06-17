@@ -12,7 +12,8 @@ class Edital:
         context = {
             'rodape': [],
             'edital': get_edital(request),
-            'edital_html': get_descricao_edital_html_2(request)
+            'edital_html': get_descricao_edital_html_2(request),
+            'servicos_selecionados': get_ids_servicos_inscricao(request)
         }
 
         if request.method == 'GET':

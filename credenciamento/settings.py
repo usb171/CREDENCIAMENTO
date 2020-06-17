@@ -129,7 +129,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 PRIVATE_STORAGE_ROOT = os.path.join(BASE_DIR, 'media/documento_privado')
-PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_staff'
+PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_authenticated'
 
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
 

@@ -20,7 +20,6 @@ const buscarEditais = (carregar=true) => {
                     $("#id_lista_editais").html(data["editais"]);
                 }else{
                     $("#id_lista_editais").html("<h5 style='text-align: center;margin-top: 30px;'> Não foram encontrados editais, verifique os filtros acima!</h5>");
-
                 }
                 EasyLoading.hide();
             },
@@ -94,7 +93,12 @@ $('#id_servicos_select2').on('select2:unselect', function (e) {
    let ids_selected = $(this).select2("val");
    id_edital = getUrlVars().id;
    get_bloco_campos_arquivos_servico(ids_selected, id_edital);
+});
 
+$('#id_servicos_select2').on('change.select2', function (e) {
+   let ids_selected = $(this).select2("val");
+   id_edital = getUrlVars().id;
+   get_bloco_campos_arquivos_servico(ids_selected, id_edital);
 });
 
 let get_bloco_campos_arquivos_servico = (ids, id_edital) => {
@@ -108,6 +112,7 @@ let get_bloco_campos_arquivos_servico = (ids, id_edital) => {
     });
 };
 
+$("#id_servicos_select2").val(JSON.parse($("#id_servicos_select2_val").val())).trigger('change');
 
 function getUrlVars() {
     /**
@@ -117,3 +122,4 @@ function getUrlVars() {
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { vars[key] = value; });
     return vars;
 }
+

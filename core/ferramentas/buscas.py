@@ -1,7 +1,7 @@
 from webbrowser import get
 
 from django.middleware.csrf import get_token
-from edital.models import Edital
+from edital.models import Edital, Inscricao, DocumentoRequisitoInscricao
 from core.models import Documento, Requisito, PoloAtuacao, Contratante, Servico
 
 from usuario.models import Usuario
@@ -97,6 +97,27 @@ def filtros_buscas(request):
 
     return editais
 
+
+
+def get_inscricao(request):
+
+    try:
+        id = request.GET.get('id')
+        if id is None: id = request.GET.get('id_edital')
+        # print('Edital id: ', Edital.objects.get(id=id))
+
+        return Inscricao.objects.get(usuario=get_usuario(request), edital=Edital.objects.get(id=id))
+    except Exception as e:
+        print(e)
+        return None
+
+
+def get_ids_servicos_inscricao(request):
+    try:
+        return list(map(lambda x: x.id, get_inscricao(request).servicos.all()))
+    except Exception as e:
+        print(e)
+        return None
 
 def get_editais():
     return Edital.objects.order_by("-data_publicacao").filter(status__in=['1', '2', '3'])
@@ -221,7 +242,7 @@ def get_descricao_edital_html_2(request):
                     '<input type="hidden" name="csrfmiddlewaretoken" value="{CSRF}">' \
                     '{servicos}' \
                     '{button}' \
-                '</form>' \
+               '</form>' \
 
         button_html = '<div class="row">' \
                       '<div class="col-md-12 mt-4" style="text-align: end;">' \
@@ -238,7 +259,6 @@ def get_descricao_edital_html_2(request):
             documentos_html = documentos_html + "<a href='{doc}' target='_blank'><img src='../static/assets/site1/images/icons/documento.png' style='height: 25px;'></img><i style='text-decoration: underline !important;'>{titulo}</i></a><br>".format(
                 doc=documento.get_absolute_url(),
                 titulo=documento.titulo)
-
 
         return html.format(codigo=edital.codigo,
                            categoria=edital.get_categoria(),
@@ -262,6 +282,7 @@ def get_descricao_edital_html_2(request):
 def get_blocos_campos_arquivos_servicos(request):
     ids_selecionados = request.GET.get('ids_selected').split(',')
     id_edital = request.GET.get('id_edital')
+    inscricao = get_inscricao(request)
 
     blocos_html = ''
 
@@ -276,21 +297,32 @@ def get_blocos_campos_arquivos_servicos(request):
                      '</div>'
 
 
-    body_bloco_html = '<div class="input-group">' \
-                    '<input type="file" name="files[{id}]" id="file_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">'\
-                    '<input type="text" id="id_text_file_{id}" class="form-control" value="{nome_arquivo}" readonly="">'\
-                    '<span class="input-group-btn">'\
-                        '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Carregar Arquivo</a>' \
-                    '</span>'\
-                '</div>'
+    body_bloco_html = '<a href="{link_arquivo}"> {nome_arquivo} </a>'\
+                       '<div class="input-group">' \
+                            '<input type="file" name="files[{id}]" id="file_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">'\
+                            '<input type="text" id="id_text_file_{id}" class="form-control" value="{nome_arquivo}" readonly="">'\
+                            '<span class="input-group-btn">'\
+                                '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Carregar Arquivo</a>' \
+                            '</span>'\
+                      '</div>'
 
 
     if ids_selecionados[0] is not '' and id_edital is not '':
         for servico in  Servico.objects.filter(id__in=ids_selecionados):
             body_servico = ''
             for requisito in Requisito.objects.filter(servico=servico):
+                print(inscricao, requisito)
+                if inscricao is not None and requisito is not None:
+                    documento = DocumentoRequisitoInscricao.objects.filter(requisito=requisito, inscricao=inscricao)
+                    if documento:
+                        nome_arquivo=documento.first().get_nome_documento()
+                        link_arquivo = documento.first().documento.url
+                else:
+                    nome_arquivo = ''
+                    link_arquivo = ''
                 body_bloco_requisito = body_bloco_html.format(id=requisito.id,
-                                                    nome_arquivo='',
+                                                    nome_arquivo=nome_arquivo,
+                                                    link_arquivo=link_arquivo,
                                                     evento_set_nome_arquivo="$('#id_text_file_{id}').val($('#file_{id}')[0].files[0].name);".format(id=requisito.id),
                                                     evento_abrir_arquivo="$('#file_{id}').trigger('click');".format(id=requisito.id))
 
