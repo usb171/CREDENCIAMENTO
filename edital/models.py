@@ -24,6 +24,8 @@ class Edital(models.Model):
     ano_publicacao = models.CharField(max_length=5, verbose_name='Ano de Publicação', blank=True, null=True, editable=False)
     inicio_inscricao = models.DateTimeField(verbose_name='Inicio das Inscrições')
     fim_inscricao = models.DateTimeField(verbose_name='Fim das Inscrições')
+    created_at = models.DateTimeField('Criado em', auto_now_add=True, null=True)
+    update_at = models.DateTimeField('Atualizado em', auto_now=True, null=True)
 
     class Meta:
         # ordering = ['-id']
@@ -66,7 +68,7 @@ class DocumentoUsuarioInscricao(models.Model):
     observacao = models.TextField(verbose_name='Observações', blank=True)
     documento = PrivateFileField(verbose_name="Documento", upload_subfolder=get_path_private, blank=True, null=True)
     inscricao = models.ForeignKey(Inscricao, on_delete=models.CASCADE, null=True, blank=False)
-    DocumentoUsuario = models.ForeignKey('core.DocumentoUsuario', on_delete=models.CASCADE, null=True, blank=False, editable=False)
+    documento_usuario = models.ForeignKey('core.DocumentoUsuario', on_delete=models.CASCADE, null=True, blank=False, editable=False)
     created_at = models.DateTimeField('Criado em', auto_now_add=True, null=True)
     update_at = models.DateTimeField('Atualizado em', auto_now=True, null=True)
 
@@ -74,8 +76,8 @@ class DocumentoUsuarioInscricao(models.Model):
         verbose_name = 'Documento Pessoal do Usuário'
         verbose_name_plural = 'Documentos Pessoais dos Usuários'
 
-    # def __str__(self):
-    #     return  '{}'.format(self.DocumentoUsuario)
+    def __str__(self):
+        return  '{}'.format(self.documento_usuario.titulo)
 
 
 class DocumentoRequisitoInscricao(models.Model):

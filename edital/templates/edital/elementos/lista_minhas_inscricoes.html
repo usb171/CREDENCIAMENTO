@@ -19,26 +19,30 @@
             </div>
 
             <div class="card-body" style="padding-top: 5px; padding-bottom: 5px;">
-                {% for edital in editais %}
-                <div class="edital content-wrap" onclick="window.location='/edital/inscricao?id={{edital.id}}';">
-                    <div class="container clearfix">
-                        <div class="card">
-                            <div class="card-header">
-                                Edital N° {{edital.codigo}}
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <span>Categoria:</span> {{edital.get_categoria}}
-                                    <br>
-                                    <span>Andamento:</span> {{edital.get_status}}
-                                    <br>
-                                    <span>Título:</span> {{edital.titulo}}
-                                </h5>
+                {% if editais %}
+                    {% for edital in editais %}
+                    <div class="edital content-wrap" onclick="window.location='/edital/inscricao?id={{edital.id}}';">
+                        <div class="container clearfix">
+                            <div class="card">
+                                <div class="card-header">
+                                    Edital N° {{edital.codigo}}
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <span>Categoria:</span> {{edital.get_categoria}}
+                                        <br>
+                                        <span>Andamento:</span> {{edital.get_status}}
+                                        <br>
+                                        <span>Título:</span> {{edital.titulo}}
+                                    </h5>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                <h3>No momento não foram encontrados inscrições em editais!</h3>
+                {% endif %}
             </div>
 
         </div>

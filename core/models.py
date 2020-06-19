@@ -63,10 +63,10 @@ class Servico(models.Model):
 
     titulo = models.CharField('Título', max_length=240, null=True)
     codigo = models.CharField(max_length=250, verbose_name='Código', unique=True)
-    polo_atuacao = models.ForeignKey(PoloAtuacao, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Polo de atuação')
+    polo_atuacao = models.ForeignKey(PoloAtuacao, on_delete=models.CASCADE, null=True, blank=False, editable=True, verbose_name='Polo de atuação')
 
     def __str__(self):
-        return self.codigo + ' - ' + self.titulo + '  /  ' + self.polo_atuacao.nome
+        return  '{} - {} / {}'.format(self.codigo, self.titulo, self.polo_atuacao.nome)
 
 
 class Requisito(models.Model):

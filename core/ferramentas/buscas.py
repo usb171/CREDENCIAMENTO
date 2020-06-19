@@ -174,27 +174,33 @@ def get_documentos_usuario_html(request):
                     '</div>' \
                  '</div>'
 
-    documentos_usuario_html = '<div class="l-1"><span>Status do Documento: </span>{status_documento}</div>' \
-                               '<div class="l-2"><span>Documento Atual: </span>' \
-                                    '<a href="{link_arquivo}" target="_blank">' \
-                                        '<img src="../static/assets/site1/images/icons/documento.png" style="height: 25px;">' \
-                                        '<i style="text-decoration: underline !important;">Documento</i>' \
-                                    '</a>' \
-                               '</div>' \
-                               '<div class="l-1"><span>Atualizado em: </span>{atualizado_em}</div>' \
-                               '<div class="l-2"><span>Observação do Avaliador: </span>{observacao_avaliador}</div>' \
-                                '<div class="input-group">' \
-                                  '<div class="input-group l-1">' \
-                                      '<input type="file" name="files_usuario[{id}]" id="file_usuario_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">' \
-                                      '<input type="text" id="id_text_file_usuario_{id}" class="form-control" value="{nome_arquivo}" readonly="">' \
-                                      '<span class="input-group-btn">' \
-                                      '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Carregar Arquivo</a>' \
-                                      '</span>' \
+    documentos_usuario_html = '<div class="card mt-4">' \
+                                  '<h4 class="card-header"> {nome_arquivo} </h4>' \
+                                  '<div class="card-body">' \
+                                      '<div style="display: {flag_show_upload_arquivo}">' \
+                                          '<div class="l-1"><span>Status do Documento: </span>{status_documento}</div>' \
+                                          '<div class="l-2"><span>Documento Atual: </span>' \
+                                              '<a href="{link_arquivo}" target="_blank">' \
+                                                    '<img src="../static/assets/site1/images/icons/documento.png" style="height: 25px;">' \
+                                                    '<i style="text-decoration: underline !important;">Documento</i>' \
+                                              '</a>' \
+                                          '</div>' \
+                                          '<div class="l-1"><span>Atualizado em: </span>{atualizado_em}</div>' \
+                                          '<div class="l-2"><span>Observação do Avaliador: </span>{observacao_avaliador}</div>' \
+                                      '</div>' \
+                                      '<div class="input-group l-1">' \
+                                            '<input type="file" name="files_usuario[{id}]" id="file_usuario_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">' \
+                                            '<input type="text" id="id_text_file_usuario_{id}" class="form-control" value="{nome_arquivo}" readonly="">' \
+                                            '<span class="input-group-btn">' \
+                                                '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Procurar Arquivo</a>' \
+                                            '</span>' \
+                                      '</div>' \
                                   '</div>' \
                               '</div>' \
 
     for documento in documentos:
-        blocos_html = blocos_html + documentos_usuario_html.format(status_documento='',
+        blocos_html = blocos_html + documentos_usuario_html.format(flag_show_upload_arquivo='none',
+                                                                   status_documento='',
                                                                    link_arquivo='',
                                                                    atualizado_em='',
                                                                    observacao_avaliador='',
@@ -203,7 +209,7 @@ def get_documentos_usuario_html(request):
                                                                    evento_abrir_arquivo="$('#file_usuario_{id}').trigger('click');".format(id=documento.id),
                                                                    nome_arquivo=documento.titulo
                                                                    )
-    return ''
+    # return ''
     return bloco_html.format(bloco=blocos_html)
 
 
@@ -293,8 +299,8 @@ def get_descricao_edital_html_2(request):
                    '<div class="l-2">{documentos}</div>' \
                    '<form action="" method="post" enctype="multipart/form-data" id="form_inscricao">' \
                         '<input type="hidden" name="csrfmiddlewaretoken" value="{CSRF}">' \
-                        '{documentos_usuario}' \
                         '{servicos}' \
+                        '{documentos_usuario}' \
                         '{button}' \
                    '</form>' \
                    '{field_ids_inscricao_servicos}' \
@@ -380,7 +386,7 @@ def get_blocos_campos_arquivos_servicos(request):
                             '<input type="file" name="files[{id}]" id="file_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">'\
                             '<input type="text" id="id_text_file_{id}" class="form-control" value="{nome_arquivo}" readonly="">'\
                             '<span class="input-group-btn">'\
-                                '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Carregar Arquivo</a>' \
+                                '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Procurar Arquivo</a>' \
                             '</span>'\
                        '</div>' \
                        '{button_cancelar_documento}'\
