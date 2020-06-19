@@ -1,12 +1,8 @@
-from webbrowser import get
-
 from django.middleware.csrf import get_token
-from edital.models import Edital, Inscricao, DocumentoRequisitoInscricao
+from edital.models import Edital, Inscricao, DocumentoRequisitoInscricao, DocumentoUsuarioInscricao
 from core.models import Documento, Requisito, PoloAtuacao, Contratante, Servico
-
 from usuario.models import Usuario
 from .funcoes import *
-
 
 
 def get_usuario(request):
@@ -98,7 +94,6 @@ def filtros_buscas(request):
     return editais
 
 
-
 def get_inscricao(request):
 
     try:
@@ -119,8 +114,17 @@ def get_ids_servicos_inscricao(request):
         print(e)
         return None
 
+
+def get_field_ids_inscricao_servicos(request):
+    return '<input id="id_servicos_select2_val" value = "{}" hidden>'.format(get_ids_servicos_inscricao(request))
+
+
 def get_editais():
     return Edital.objects.order_by("-data_publicacao").filter(status__in=['1', '2', '3'])
+
+
+def get_editais_minhas_inscricoes(request):
+    return list(map(lambda inscricao: inscricao.edital, Inscricao.objects.filter(usuario=get_usuario(request))))
 
 
 def get_editais_html(request):
@@ -153,6 +157,54 @@ def get_editais_html(request):
                                                        titulo=edital.titulo)
 
     return editais_html
+
+
+def get_documentos_usuario_html(request):
+
+    edital = Edital.objects.get(id=request.GET.get('id'))
+    documentos = edital.documentos_usuario.all()
+    inscricao = get_inscricao(request)
+
+    blocos_html = ''
+
+    bloco_html = '<div class="card mt-4">' \
+                    '<h4 class="card-header">Documentos do Usuário </h4>' \
+                    '<div class="card-body">' \
+                        '{bloco}' \
+                    '</div>' \
+                 '</div>'
+
+    documentos_usuario_html = '<div class="l-1"><span>Status do Documento: </span>{status_documento}</div>' \
+                               '<div class="l-2"><span>Documento Atual: </span>' \
+                                    '<a href="{link_arquivo}" target="_blank">' \
+                                        '<img src="../static/assets/site1/images/icons/documento.png" style="height: 25px;">' \
+                                        '<i style="text-decoration: underline !important;">Documento</i>' \
+                                    '</a>' \
+                               '</div>' \
+                               '<div class="l-1"><span>Atualizado em: </span>{atualizado_em}</div>' \
+                               '<div class="l-2"><span>Observação do Avaliador: </span>{observacao_avaliador}</div>' \
+                                '<div class="input-group">' \
+                                  '<div class="input-group l-1">' \
+                                      '<input type="file" name="files_usuario[{id}]" id="file_usuario_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">' \
+                                      '<input type="text" id="id_text_file_usuario_{id}" class="form-control" value="{nome_arquivo}" readonly="">' \
+                                      '<span class="input-group-btn">' \
+                                      '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Carregar Arquivo</a>' \
+                                      '</span>' \
+                                  '</div>' \
+                              '</div>' \
+
+    for documento in documentos:
+        blocos_html = blocos_html + documentos_usuario_html.format(status_documento='',
+                                                                   link_arquivo='',
+                                                                   atualizado_em='',
+                                                                   observacao_avaliador='',
+                                                                   id=documento.id,
+                                                                   evento_set_nome_arquivo="$('#id_text_file_usuario_{id}').val($('#file_usuario_{id}')[0].files[0].name);".format(id=documento.id),
+                                                                   evento_abrir_arquivo="$('#file_usuario_{id}').trigger('click');".format(id=documento.id),
+                                                                   nome_arquivo=documento.titulo
+                                                                   )
+    return ''
+    return bloco_html.format(bloco=blocos_html)
 
 
 def get_servicos_edital_html(request, edital):
@@ -229,20 +281,26 @@ def get_descricao_edital_html_2(request):
     try:
         edital = Edital.objects.get(id=request.GET.get('id'))
 
-        html = '<h4>' \
-               '<div class="l-1"><span>Edital Nº: </span>{codigo}</div>' \
-               '<div class="l-2"><span>Categoria: </span>{categoria}</div>' \
-               '<div class="l-1"><span>Andamento: </span>{andamento}</div>' \
-               '<div class="l-2"><span>Data da Publicação: </span>{data_publicacao}</div>' \
-               '<div class="l-1"><span>Período de Inscrição: </span>{inicio_inscricao} &nbsp; ao &nbsp; {fim_inscricao}</div>' \
-               '<div class="l-2"><span>Título: </span>{titulo}</div>' \
-               '<div class="l-1"><span>Descrição: </span>{descricao}</div>' \
-               '<div class="l-2">{documentos}</div>' \
-               '<form action="" method="post" enctype="multipart/form-data" id="form_inscricao">' \
-                    '<input type="hidden" name="csrfmiddlewaretoken" value="{CSRF}">' \
-                    '{servicos}' \
-                    '{button}' \
-               '</form>' \
+        html = '<div class="edital-descricao">'\
+                   '<h5>' \
+                   '<div class="l-1"><span>Edital Nº: </span>{codigo}</div>' \
+                   '<div class="l-2"><span>Categoria: </span>{categoria}</div>' \
+                   '<div class="l-1"><span>Andamento: </span>{andamento}</div>' \
+                   '<div class="l-2"><span>Data da Publicação: </span>{data_publicacao}</div>' \
+                   '<div class="l-1"><span>Período de Inscrição: </span>{inicio_inscricao} &nbsp; ao &nbsp; {fim_inscricao}</div>' \
+                   '<div class="l-2"><span>Título: </span>{titulo}</div>' \
+                   '<div class="l-1"><span>Descrição: </span>{descricao}</div>' \
+                   '<div class="l-2">{documentos}</div>' \
+                   '<form action="" method="post" enctype="multipart/form-data" id="form_inscricao">' \
+                        '<input type="hidden" name="csrfmiddlewaretoken" value="{CSRF}">' \
+                        '{documentos_usuario}' \
+                        '{servicos}' \
+                        '{button}' \
+                   '</form>' \
+                   '{field_ids_inscricao_servicos}' \
+                   '</h5>' \
+                '</div>'
+
 
         button_html = '<div class="row">' \
                       '<div class="col-md-12 mt-4" style="text-align: end;">' \
@@ -269,7 +327,9 @@ def get_descricao_edital_html_2(request):
                            titulo=edital.titulo,
                            descricao=edital.descricao,
                            documentos=documentos_html,
+                           documentos_usuario=get_documentos_usuario_html(request),
                            button=button_html.format(id=edital.id),
+                           field_ids_inscricao_servicos=get_field_ids_inscricao_servicos(request),
                            servicos=servicos,
                            CSRF=get_token(request)
                            )
@@ -297,34 +357,73 @@ def get_blocos_campos_arquivos_servicos(request):
                      '</div>'
 
 
-    body_bloco_html = '<a href="{link_arquivo}"> {nome_arquivo} </a>'\
-                       '<div class="input-group">' \
+    body_bloco_retorno_html = '<div class="l-1"><span>Status do Documento: </span>{status_documento}</div>' \
+                               '<div class="l-2"><span>Documento Atual: </span>' \
+                                    '<a href="{link_arquivo}" target="_blank">' \
+                                        '<img src="../static/assets/site1/images/icons/documento.png" style="height: 25px;">' \
+                                        '<i style="text-decoration: underline !important;">Documento</i>' \
+                                    '</a>' \
+                               '</div>' \
+                               '<div class="l-1"><span>Atualizado em: </span>{atualizado_em}</div>' \
+                               '<div class="l-2"><span>Observação do Avaliador: </span>{observacao_avaliador}</div>' \
+
+
+    button_cancelar_documento = '<div class="l-2" style="display: {flag_show_button_cancelar_documento}">' \
+                                    '<a onclick="cancelar_documento({id_documento});" style="cursor: pointer; color: red; font-size: smaller; text-decoration: underline !important;">' \
+                                        'Cancelar Documento' \
+                                    '</a>' \
+                               '</div>' \
+
+
+    body_bloco_html =  '{body_bloco_retorno_html}'\
+                       '<div class="input-group l-1" style="display: {flag_show_upload_arquivo}">' \
                             '<input type="file" name="files[{id}]" id="file_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">'\
                             '<input type="text" id="id_text_file_{id}" class="form-control" value="{nome_arquivo}" readonly="">'\
                             '<span class="input-group-btn">'\
                                 '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Carregar Arquivo</a>' \
                             '</span>'\
-                      '</div>'
+                       '</div>' \
+                       '{button_cancelar_documento}'\
 
 
     if ids_selecionados[0] is not '' and id_edital is not '':
         for servico in  Servico.objects.filter(id__in=ids_selecionados):
             body_servico = ''
             for requisito in Requisito.objects.filter(servico=servico):
-                print(inscricao, requisito)
+                nome_arquivo = ''
+                link_arquivo = ''
+                status_documento = ''
+                atualizado_em = ''
+                body_bloco_retorno_html_aux = ''
+                observacao_avaliador = ''
+                button_cancelar_documento_aux = ''
+                flag_show_upload_arquivo = ''
+                flag_show_button_cancelar_documento = ''
                 if inscricao is not None and requisito is not None:
                     documento = DocumentoRequisitoInscricao.objects.filter(requisito=requisito, inscricao=inscricao)
                     if documento:
-                        nome_arquivo=documento.first().get_nome_documento()
+                        nome_arquivo = documento.first().get_nome_documento()
                         link_arquivo = documento.first().documento.url
-                else:
-                    nome_arquivo = ''
-                    link_arquivo = ''
+                        status_documento = documento.first().get_status()
+                        atualizado_em = dataHora_BR(documento.first().update_at)
+                        observacao_avaliador = documento.first().observacao
+                        flag_show_upload_arquivo = 'none' if documento.first().status is '1' else ''
+                        flag_show_button_cancelar_documento = 'none' if documento.first().status is '1' else ''
+                        button_cancelar_documento_aux = button_cancelar_documento.format(id_documento=documento.first().id,
+                                                                                         flag_show_button_cancelar_documento=flag_show_button_cancelar_documento)
+                        body_bloco_retorno_html_aux = body_bloco_retorno_html.format(status_documento=status_documento,
+                                                                                     link_arquivo=link_arquivo,
+                                                                                     observacao_avaliador=observacao_avaliador,
+                                                                                     atualizado_em=atualizado_em
+                                                                                 )
                 body_bloco_requisito = body_bloco_html.format(id=requisito.id,
-                                                    nome_arquivo=nome_arquivo,
-                                                    link_arquivo=link_arquivo,
-                                                    evento_set_nome_arquivo="$('#id_text_file_{id}').val($('#file_{id}')[0].files[0].name);".format(id=requisito.id),
-                                                    evento_abrir_arquivo="$('#file_{id}').trigger('click');".format(id=requisito.id))
+                                                              nome_arquivo=nome_arquivo,
+                                                              body_bloco_retorno_html=body_bloco_retorno_html_aux,
+                                                              evento_set_nome_arquivo="$('#id_text_file_{id}').val($('#file_{id}')[0].files[0].name);".format(id=requisito.id),
+                                                              evento_abrir_arquivo="$('#file_{id}').trigger('click');".format(id=requisito.id),
+                                                              button_cancelar_documento=button_cancelar_documento_aux,
+                                                              flag_show_upload_arquivo=flag_show_upload_arquivo
+                                                              )
 
                 body_servico = body_servico + requisito_html.format(header=requisito.titulo, body=body_bloco_requisito)
 

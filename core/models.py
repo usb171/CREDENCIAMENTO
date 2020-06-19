@@ -43,6 +43,22 @@ class Documento(models.Model):
     def __str__(self):
         return self.titulo
 
+
+class DocumentoUsuario(models.Model):
+    ativo = models.BooleanField(default=True)
+    titulo = models.CharField(max_length=250, verbose_name='Título', blank=False, null=True)
+
+    class Meta:
+        verbose_name = 'Documento Pessoal do Usuario'
+        verbose_name_plural = 'Documentos Pessoais dos Usuários'
+
+    def get_absolute_url(self):
+        return self.documento.url
+
+    def __str__(self):
+        return self.titulo
+
+
 class Servico(models.Model):
 
     titulo = models.CharField('Título', max_length=240, null=True)

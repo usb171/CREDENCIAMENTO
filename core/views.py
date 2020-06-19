@@ -65,3 +65,6 @@ class CoreAjax:
     def get_blocos_campos_arquivos_servicos(request):
         blocos = get_blocos_campos_arquivos_servicos(request)
         return JsonResponse({'blocos': blocos})
+
+    def cancelar_documento(request):
+        return JsonResponse({'flag': cancelar_documento(request)})

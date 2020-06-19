@@ -5,6 +5,7 @@ from private_storage.fields import PrivateFileField
 def get_path_private(instance):
     return "/{}".format(instance.inscricao.usuario.id)
 
+
 class Edital(models.Model):
     """
         *   Classe Edital
@@ -18,6 +19,7 @@ class Edital(models.Model):
     descricao = models.TextField(verbose_name="Descrição", null=True)
     contratante = models.ManyToManyField('core.contratante', related_query_name='+')
     servicos = models.ManyToManyField('core.servico', blank=True, related_query_name='+')
+    documentos_usuario = models.ManyToManyField('core.DocumentoUsuario', blank=False, related_query_name='+')
     data_publicacao = models.DateTimeField(verbose_name='Data de Publicação')
     ano_publicacao = models.CharField(max_length=5, verbose_name='Ano de Publicação', blank=True, null=True, editable=False)
     inicio_inscricao = models.DateTimeField(verbose_name='Inicio das Inscrições')
@@ -59,6 +61,23 @@ class Inscricao(models.Model):
         return self.usuario.email
 
 
+class DocumentoUsuarioInscricao(models.Model):
+    status = models.CharField(max_length=100, choices=STATUS_DOCUMENTO_REQUISITO_INSCRICAO, default='0', verbose_name='Status do Documento')
+    observacao = models.TextField(verbose_name='Observações', blank=True)
+    documento = PrivateFileField(verbose_name="Documento", upload_subfolder=get_path_private, blank=True, null=True)
+    inscricao = models.ForeignKey(Inscricao, on_delete=models.CASCADE, null=True, blank=False)
+    DocumentoUsuario = models.ForeignKey('core.DocumentoUsuario', on_delete=models.CASCADE, null=True, blank=False, editable=False)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True, null=True)
+    update_at = models.DateTimeField('Atualizado em', auto_now=True, null=True)
+
+    class Meta:
+        verbose_name = 'Documento Pessoal do Usuário'
+        verbose_name_plural = 'Documentos Pessoais dos Usuários'
+
+    # def __str__(self):
+    #     return  '{}'.format(self.DocumentoUsuario)
+
+
 class DocumentoRequisitoInscricao(models.Model):
     servico = models.ForeignKey('core.Servico', on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=100, choices=STATUS_DOCUMENTO_REQUISITO_INSCRICAO, default='0', verbose_name='Status do Documento')
@@ -66,6 +85,8 @@ class DocumentoRequisitoInscricao(models.Model):
     inscricao = models.ForeignKey(Inscricao, on_delete=models.CASCADE, null=True, blank=False)
     requisito = models.ForeignKey('core.Requisito', on_delete=models.CASCADE, null=True, blank=False, editable=False)
     documento = PrivateFileField(verbose_name="Documento", upload_subfolder=get_path_private, blank=True, null=True)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True, null=True)
+    update_at = models.DateTimeField('Atualizado em', auto_now=True, null=True)
 
     class Meta:
         verbose_name = 'Documento Requisitado'
@@ -74,5 +95,19 @@ class DocumentoRequisitoInscricao(models.Model):
     def __str__(self):
         return  '{} / {}'.format(self.requisito.titulo, self.servico)
 
+
+    def delete(self):
+        # Remova o serviço caso não tenha mais nenhum documento do mesmo na inscricção
+        len_documentos = len(DocumentoRequisitoInscricao.objects.filter(inscricao=self.inscricao, servico=self.servico))
+        print(len_documentos)
+        if len_documentos == 1:
+            self.inscricao.servicos.remove(self.servico)
+
+        super(DocumentoRequisitoInscricao, self).delete()
+
     def get_nome_documento(self):
         return self.documento.name.split('/')[1]
+
+
+    def get_status(self):
+        return STATUS_DOCUMENTO_REQUISITO_INSCRICAO[int(self.status)][1]

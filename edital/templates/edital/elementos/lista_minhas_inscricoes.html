@@ -1,6 +1,6 @@
 <div class="content-wrap" style="padding: 40px 0;">
     <div class="container clearfix">
-        <img src="/static/assets/site1/images/logo/fiepi_top.jpeg">
+        <img src="/static/assets/site1/images/logo/fiepi_top_2.jpeg">
         <div class="card">
             <div class="card">
                 <div class="card-body">
@@ -10,7 +10,8 @@
                     </div>
                     <a href="{% url 'index' %}" class="button button-3d button-rounded button-blue"><i
                             class="icon-list"></i>Editais</a>
-                    <a href="#" onclick="$('#modal_meus_dados').modal('show');" class="button button-3d button-rounded button-blue"><i
+                    <a href="#" onclick="$('#modal_meus_dados').modal('show');"
+                       class="button button-3d button-rounded button-blue"><i
                             class="icon-user2"></i>Meus Dados</a>
                     <a href="{% url 'logout' %}" class="button button-3d button-rounded button-blue"><i
                             class="icon-line-cross"></i>Sair</a>
@@ -19,11 +20,20 @@
 
             <div class="card-body" style="padding-top: 5px; padding-bottom: 5px;">
                 {% for edital in editais %}
-                <div class="edital content-wrap" onclick="abrirDescricaoMeuEdital({{edital.id}})">
+                <div class="edital content-wrap" onclick="window.location='/edital/inscricao?id={{edital.id}}';">
                     <div class="container clearfix">
                         <div class="card">
                             <div class="card-header">
                                 Edital N° {{edital.codigo}}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span>Categoria:</span> {{edital.get_categoria}}
+                                    <br>
+                                    <span>Andamento:</span> {{edital.get_status}}
+                                    <br>
+                                    <span>Título:</span> {{edital.titulo}}
+                                </h5>
                             </div>
                         </div>
                     </div>
@@ -36,7 +46,7 @@
 </div>
 
 {% if usuario.categoria_pessoa == '0' %}
-    {% include 'usuario/elementos/modalMeusDadosPessoaFisica.html' %}
+{% include 'usuario/elementos/modalMeusDadosPessoaFisica.html' %}
 {% else %}
-    {% include 'usuario/elementos/modalMeusDadosPessoaJuridica.html' %}
+{% include 'usuario/elementos/modalMeusDadosPessoaJuridica.html' %}
 {% endif %}

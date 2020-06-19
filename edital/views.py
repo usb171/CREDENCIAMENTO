@@ -13,19 +13,22 @@ class Edital:
             'rodape': [],
             'edital': get_edital(request),
             'edital_html': get_descricao_edital_html_2(request),
-            'servicos_selecionados': get_ids_servicos_inscricao(request)
         }
 
         if request.method == 'GET':
             return render(request=request, template_name=template_name, context=context)
         elif request.method == 'POST':
             inscrever(request)
+            context['edital_html'] = get_descricao_edital_html_2(request)
             return render(request=request, template_name=template_name, context=context)
 
 
     @login_required(login_url='index')
     def minhasInscricoes(request):
         template_name = "edital/minhasInscricoes.html"
-        context = {'usuario': get_usuario(request)}
+        context = {
+                'usuario': get_usuario(request),
+                'editais': get_editais_minhas_inscricoes(request)
+        }
         if request.method == 'GET':
             return render(request=request, template_name=template_name, context=context)

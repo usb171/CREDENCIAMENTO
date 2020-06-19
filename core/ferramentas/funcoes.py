@@ -3,6 +3,7 @@ from .sessao import *
 from django.contrib.auth.models import User
 from usuario.models import Usuario
 from django.contrib.auth import login as loginAuth
+from edital.models import DocumentoRequisitoInscricao
 
 
 def gerar_senha():
@@ -16,6 +17,14 @@ def gerar_senha():
 def dataHora_BR(dataTime):
     return dataTime.strftime("%d/%m/%Y %H:%M")
 
+
+def cancelar_documento(request):
+    documento = DocumentoRequisitoInscricao.objects.get(id=request.GET.get('id'))
+    if documento is not None:
+        documento.delete()
+        return True
+    else:
+        return False
 
 def login(formulario, request):
     return Sessao.login(email=formulario['email'], senha=formulario['senha'], request=request)
