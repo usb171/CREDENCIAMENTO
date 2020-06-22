@@ -122,9 +122,24 @@
         return vars;
     }
 
-    let cancelar_documento = (id) => {
+    let cancelar_documento_requisito = (id) => {
         $.ajax({
-            url: "/cancelarDocumentoAjax",
+            url: "/cancelarDocumentoRequisitoAjax",
+            data: {'id': id},
+            dataType: 'json',
+            success: function (data) {
+                let ids_selected = $(id_servicos_select2).select2("val");
+                let id_edital = getUrlVars().id;
+                get_bloco_campos_arquivos_servico(ids_selected, id_edital);
+                console.log(data);
+                window.location='inscricao?id=' + getUrlVars().id;
+            }
+        });
+    };
+
+    let cancelar_documento_usuario = (id) => {
+        $.ajax({
+            url: "/cancelarDocumentoUsuarioAjax",
             data: {'id': id},
             dataType: 'json',
             success: function (data) {

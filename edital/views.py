@@ -11,6 +11,7 @@ class Edital:
         template_name = "edital/inscricao.html"
         context = {
             'rodape': [],
+            'usuario': get_usuario(request),
             'edital': get_edital(request),
             'edital_html': get_descricao_edital_html_2(request),
         }
@@ -30,5 +31,6 @@ class Edital:
                 'usuario': get_usuario(request),
                 'editais': get_editais_minhas_inscricoes(request)
         }
+
         if request.method == 'GET':
             return render(request=request, template_name=template_name, context=context)

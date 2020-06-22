@@ -3,6 +3,7 @@ from edital.models import Edital, Inscricao, DocumentoRequisitoInscricao, Docume
 from core.models import Documento, Requisito, PoloAtuacao, Contratante, Servico
 from usuario.models import Usuario
 from .funcoes import *
+import re
 
 
 def get_usuario(request):
@@ -95,12 +96,10 @@ def filtros_buscas(request):
 
 
 def get_inscricao(request):
-
     try:
         id = request.GET.get('id')
         if id is None: id = request.GET.get('id_edital')
-        # print('Edital id: ', Edital.objects.get(id=id))
-
+        id = re.sub("\D", "", id)
         return Inscricao.objects.get(usuario=get_usuario(request), edital=Edital.objects.get(id=id))
     except Exception as e:
         print(e)
@@ -174,10 +173,11 @@ def get_documentos_usuario_html(request):
                     '</div>' \
                  '</div>'
 
+
     documentos_usuario_html = '<div class="card mt-4">' \
                                   '<h4 class="card-header"> {nome_arquivo} </h4>' \
                                   '<div class="card-body">' \
-                                      '<div style="display: {flag_show_upload_arquivo}">' \
+                                      '<div style="display: {flag_show_retorno_avaliacao}">' \
                                           '<div class="l-1"><span>Status do Documento: </span>{status_documento}</div>' \
                                           '<div class="l-2"><span>Documento Atual: </span>' \
                                               '<a href="{link_arquivo}" target="_blank">' \
@@ -188,26 +188,58 @@ def get_documentos_usuario_html(request):
                                           '<div class="l-1"><span>Atualizado em: </span>{atualizado_em}</div>' \
                                           '<div class="l-2"><span>Observação do Avaliador: </span>{observacao_avaliador}</div>' \
                                       '</div>' \
-                                      '<div class="input-group l-1">' \
-                                            '<input type="file" name="files_usuario[{id}]" id="file_usuario_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">' \
-                                            '<input type="text" id="id_text_file_usuario_{id}" class="form-control" value="{nome_arquivo}" readonly="">' \
-                                            '<span class="input-group-btn">' \
-                                                '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Procurar Arquivo</a>' \
-                                            '</span>' \
+                                      '<div style="display: {flag_show_upload_arquivo}">' \
+                                            '<div class="input-group l-1">' \
+                                                '<input type="file" name="files_usuario[{id}]" id="file_usuario_{id}" onchange="{evento_set_nome_arquivo}" accept="application/pdf, image/jpeg, image/png, image/jpg" class="form-control" style="display: none">' \
+                                                '<input type="text" id="id_text_file_usuario_{id}" class="form-control" value="{nome_documento}" readonly="" required>' \
+                                                '<span class="input-group-btn">' \
+                                                    '<a onclick="{evento_abrir_arquivo}" class="button button-3d button-blue "style="margin-top: -1px; color: aliceblue;">Procurar Arquivo</a>' \
+                                                '</span>' \
+                                            '</div>' \
+                                            '<div class="l-2" style="display: {flag_show_cancelar_documento}">' \
+                                                '<a onclick="cancelar_documento_usuario({id_usuario});" style="cursor: pointer; color: red; font-size: smaller; text-decoration: underline !important;">' \
+                                                    'Cancelar Documento' \
+                                                '</a>' \
+                                           '</div>' \
                                       '</div>' \
                                   '</div>' \
                               '</div>' \
 
     for documento in documentos:
-        blocos_html = blocos_html + documentos_usuario_html.format(flag_show_upload_arquivo='none',
-                                                                   status_documento='',
-                                                                   link_arquivo='',
-                                                                   atualizado_em='',
-                                                                   observacao_avaliador='',
-                                                                   id=documento.id,
+        documento_usuario_inscricao = DocumentoUsuarioInscricao.objects.filter(inscricao=inscricao, documento_usuario=documento).first()
+        id_usuario = ''
+        link_arquivo = ''
+        atualizado_em = ''
+        nome_documento = ''
+        status_documento = ''
+        observacao_avaliador = ''
+        flag_show_upload_arquivo = ''
+        flag_show_cancelar_documento = 'none'
+        flag_show_retorno_avaliacao = 'none'
+        if documento_usuario_inscricao is not None:
+            id_usuario = documento_usuario_inscricao.id
+            flag_show_cancelar_documento = 'none' if documento_usuario_inscricao.status == '1' else ''
+            link_arquivo = documento_usuario_inscricao.documento.url
+            atualizado_em = dataHora_BR(documento_usuario_inscricao.update_at)
+            nome_documento = documento_usuario_inscricao.get_nome_documento()
+            status_documento = documento_usuario_inscricao.get_status()
+            observacao_avaliador = documento_usuario_inscricao.observacao
+            flag_show_upload_arquivo = 'none' if documento_usuario_inscricao.status == '1' else ''
+            flag_show_retorno_avaliacao = ''
+
+        blocos_html = blocos_html + documentos_usuario_html.format(id=documento.id,
+                                                                   id_usuario=id_usuario,
+                                                                   link_arquivo=link_arquivo,
+                                                                   atualizado_em=atualizado_em,
+                                                                   nome_documento=nome_documento,
+                                                                   nome_arquivo=documento.titulo,
+                                                                   status_documento=status_documento,
+                                                                   observacao_avaliador=observacao_avaliador,
+                                                                   flag_show_upload_arquivo=flag_show_upload_arquivo,
+                                                                   flag_show_retorno_avaliacao=flag_show_retorno_avaliacao,
+                                                                   flag_show_cancelar_documento=flag_show_cancelar_documento,
                                                                    evento_set_nome_arquivo="$('#id_text_file_usuario_{id}').val($('#file_usuario_{id}')[0].files[0].name);".format(id=documento.id),
                                                                    evento_abrir_arquivo="$('#file_usuario_{id}').trigger('click');".format(id=documento.id),
-                                                                   nome_arquivo=documento.titulo
                                                                    )
     # return ''
     return bloco_html.format(bloco=blocos_html)
@@ -325,19 +357,19 @@ def get_descricao_edital_html_2(request):
                 titulo=documento.titulo)
 
         return html.format(codigo=edital.codigo,
-                           categoria=edital.get_categoria(),
+                           servicos=servicos,
+                           titulo=edital.titulo,
+                           CSRF=get_token(request),
+                           documentos=documentos_html,
+                           descricao=edital.descricao,
                            andamento=edital.get_status(),
+                           categoria=edital.get_categoria(),
+                           button=button_html.format(id=edital.id),
+                           fim_inscricao=dataHora_BR(edital.fim_inscricao),
                            data_publicacao=dataHora_BR(edital.data_publicacao),
                            inicio_inscricao=dataHora_BR(edital.inicio_inscricao),
-                           fim_inscricao=dataHora_BR(edital.fim_inscricao),
-                           titulo=edital.titulo,
-                           descricao=edital.descricao,
-                           documentos=documentos_html,
                            documentos_usuario=get_documentos_usuario_html(request),
-                           button=button_html.format(id=edital.id),
                            field_ids_inscricao_servicos=get_field_ids_inscricao_servicos(request),
-                           servicos=servicos,
-                           CSRF=get_token(request)
                            )
 
     except Exception as e:
@@ -375,7 +407,7 @@ def get_blocos_campos_arquivos_servicos(request):
 
 
     button_cancelar_documento = '<div class="l-2" style="display: {flag_show_button_cancelar_documento}">' \
-                                    '<a onclick="cancelar_documento({id_documento});" style="cursor: pointer; color: red; font-size: smaller; text-decoration: underline !important;">' \
+                                    '<a onclick="cancelar_documento_requisito({id_documento});" style="cursor: pointer; color: red; font-size: smaller; text-decoration: underline !important;">' \
                                         'Cancelar Documento' \
                                     '</a>' \
                                '</div>' \

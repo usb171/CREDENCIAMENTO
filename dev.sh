@@ -3,4 +3,6 @@ PID=$(lsof -t -i:8000)
 if [ -n "${PID}" ]; then
   kill -9 $PID
 fi
-python manage.py runserver localhost:8000
+python manage.py runserver localhost:8000 &
+
+celery -A credenciamento worker --loglevel=info

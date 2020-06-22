@@ -1,0 +1,9 @@
+{% autoescape off %}
+
+Olá {{ conta.nome }}
+
+Seu E-mail de acesso: {{ conta.email }}
+
+Clink no link para ativar sua conta
+https://{{ domain }}{% url 'ativarAcesso' uidb64=uid token=token %}
+{% endautoescape %}

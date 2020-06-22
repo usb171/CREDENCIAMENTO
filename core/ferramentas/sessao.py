@@ -27,10 +27,10 @@ class Sessao():
                 if user is not None:
                     auth_login(request, user)
                 else:
-                    context['msg'] = 'Não foi possível autenticar o usuário'
+                    context['msg'] = 'Não foi possível autenticar o usuário. Seu acesso foi enviado por email!!'
                     context['logado'] = False
             else:
-                context['msg'] = 'Usuário desativado'
+                context['msg'] = 'Usuário desativado!! Verifique o seu email!!'
                 context['logado'] = False
         except Exception as e:
             print(e)

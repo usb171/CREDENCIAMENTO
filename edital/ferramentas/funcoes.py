@@ -13,7 +13,7 @@ def inscrever(request):
         id_requisito_ou_documento = re.sub("\D", "", name_field)
 
         if name_field.find('usuario') is -1:
-            print("Documento do Serviço")
+            # print("Documento do Serviço")
             requisito = Requisito.objects.get(id=id_requisito_ou_documento)
             servico = requisito.servico
             inscricao, criado_inscricao = Inscricao.objects.get_or_create(usuario=usuario, edital=edital)
@@ -29,7 +29,7 @@ def inscrever(request):
             if documentoRequisitoInscricao.status is not '1': documentoRequisitoInscricao.status = '0'
             documentoRequisitoInscricao.save()
         else:
-            print("Documento do usuario")
+            # print("Documento do usuario")
             documento_usuario = DocumentoUsuario.objects.get(id=id_requisito_ou_documento)
             inscricao, criado_inscricao = Inscricao.objects.get_or_create(usuario=usuario, edital=edital)
             documentoUsuarioInscricao, criado_documentoUsuarioInscricao = DocumentoUsuarioInscricao.objects.get_or_create(

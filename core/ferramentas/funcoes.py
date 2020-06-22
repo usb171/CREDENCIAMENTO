@@ -1,30 +1,47 @@
+import string
+import random
 from .buscas import *
 from .sessao import *
 from django.contrib.auth.models import User
 from usuario.models import Usuario
 from django.contrib.auth import login as loginAuth
-from edital.models import DocumentoRequisitoInscricao
+from edital.models import DocumentoRequisitoInscricao, DocumentoUsuarioInscricao
+from django.core import mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
-def gerar_senha():
-    """
-        Gera randomicamente umas senha para um novo usuário
-    :return:
-    """
-    return 'c3d3w9b9'
+def gerar_senha(size=4, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def enviar_email(subject, from_email, to, template, values):
+    html_message = render_to_string(template, values)
+    plain_message = strip_tags(html_message)
+    return mail.send_mail(subject, plain_message, from_email, [to], html_message)
 
 
 def dataHora_BR(dataTime):
     return dataTime.strftime("%d/%m/%Y %H:%M")
 
 
-def cancelar_documento(request):
+def cancelar_documento_requisito(request):
     documento = DocumentoRequisitoInscricao.objects.get(id=request.GET.get('id'))
     if documento is not None:
         documento.delete()
         return True
     else:
         return False
+
+
+def cancelar_documento_usuario(request):
+    documento = DocumentoUsuarioInscricao.objects.get(id=request.GET.get('id'))
+    if documento is not None:
+        documento.delete()
+        return True
+    else:
+        return False
+
 
 def login(formulario, request):
     return Sessao.login(email=formulario['email'], senha=formulario['senha'], request=request)
@@ -41,6 +58,13 @@ def criar(formulario, request):
         formulario['senha'] = gerar_senha()
         formulario['user'] = User.objects.create_user(username=formulario['email'], email=formulario['email'],
                                                       password=formulario['senha'], is_active=True)
+
+        enviar_email(subject='Credenciamento FIEPI/SESI/SENAI',
+                     from_email='credenciamento@fiepi.com',
+                     template='usuario/email/descricao_acesso_portal.html',
+                     to=formulario['email'],
+                     values={'email': formulario['email'], 'senha': formulario['senha']}
+                     )
 
         del formulario['cemail']
         del formulario['senha']
@@ -79,8 +103,6 @@ def editar(formulario, request):
             usuario.razao_social = formulario['razao_social']
             usuario.nome_fantasia = formulario['nome_fantasia']
             usuario.cnpj_nome = formulario['cnpj_nome']
-
-            pass
 
         usuario.sexo = formulario['sexo']
         usuario.telefone = formulario['telefone']

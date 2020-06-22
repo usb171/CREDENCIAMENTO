@@ -19,14 +19,14 @@ class Usuario(models.Model):
     cnpj_cpf = models.CharField(max_length=50, verbose_name='Cpf do Responsável', null=True, blank=True)
     cnpj_nome = models.CharField(max_length=150, verbose_name='Nome do Responsável', null=True, blank=True)
     sexo = models.CharField(max_length=1, choices=SEXO, default='0', blank=True, null=True)
-    telefone = models.CharField(max_length=20, verbose_name='Telefone', null=True, blank=True)
-    endereco = models.CharField(max_length=100, verbose_name='Endereço', null=True, blank=True)
+    telefone = models.CharField(max_length=20, verbose_name='Telefone', null=True, blank=True, default='')
+    endereco = models.CharField(max_length=100, verbose_name='Endereço', null=True, blank=True, default='')
     numero = models.CharField(max_length=10, verbose_name='Número', default="S/N", null=True, blank=True)
-    complemento = models.CharField(max_length=50, null=True, blank=True)
-    bairro = models.CharField(max_length=50, verbose_name='Bairro', null=True, blank=True)
-    cidade = models.CharField(max_length=50, verbose_name='Cidade', null=True, blank=True)
-    cep = models.CharField(max_length=20, verbose_name="Cep", null=True, blank=True)
-    estado = models.CharField(max_length=2, choices=ESTADOS, verbose_name='Estado', null=True, blank=True)
+    complemento = models.CharField(max_length=50, null=True, blank=True, default='')
+    bairro = models.CharField(max_length=50, verbose_name='Bairro', null=True, blank=True, default='')
+    cidade = models.CharField(max_length=50, verbose_name='Cidade', null=True, blank=True, default='')
+    cep = models.CharField(max_length=20, verbose_name="Cep", null=True, blank=True, default='')
+    estado = models.CharField(max_length=2, choices=ESTADOS, verbose_name='Estado', null=True, blank=True, default='PI')
 
     class Meta:
         verbose_name = 'Usuário'

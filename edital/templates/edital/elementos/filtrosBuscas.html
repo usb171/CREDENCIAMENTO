@@ -38,6 +38,9 @@
         </div>
         <a href="{% url 'minhasInscricoes' %}" class="button button-3d button-rounded button-blue"><i
                 class="icon-book3"></i>Minhas Inscrições</a>
+        <a href="#" onclick="$('#modal_meus_dados').modal('show');"
+                       class="button button-3d button-rounded button-blue"><i
+                            class="icon-user2"></i>Meus Dados</a>
         <a href="{% url 'logout' %}" class="button button-3d button-rounded button-blue"><i class="icon-line-cross"></i>Sair</a>
         {% else %}
         <div style="margin: 5px;">
@@ -51,3 +54,9 @@
         {% endif %}
     </div>
 </div>
+
+{% if usuario.categoria_pessoa == '0' %}
+{% include 'usuario/elementos/modalMeusDadosPessoaFisica.html' %}
+{% else %}
+{% include 'usuario/elementos/modalMeusDadosPessoaJuridica.html' %}
+{% endif %}

@@ -11,6 +11,7 @@ class Core:
         context = {
             'rodape': [],
             'editais': [],
+            'usuario': get_usuario(request),
         }
         if request.method == 'GET':
             context['editais'] = get_editais()
@@ -66,5 +67,8 @@ class CoreAjax:
         blocos = get_blocos_campos_arquivos_servicos(request)
         return JsonResponse({'blocos': blocos})
 
-    def cancelar_documento(request):
-        return JsonResponse({'flag': cancelar_documento(request)})
+    def cancelar_documento_requisito(request):
+        return JsonResponse({'flag': cancelar_documento_requisito(request)})
+
+    def cancelar_documento_usuario(request):
+        return JsonResponse({'flag': cancelar_documento_usuario(request)})

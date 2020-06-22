@@ -31,4 +31,5 @@ urlpatterns = [
     path('documento_privado/', include('private_storage.urls')),
     path('', include('core.urls')),
     path('edital/', include('edital.urls')),
+    path('usuario/', include('usuario.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

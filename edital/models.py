@@ -79,6 +79,12 @@ class DocumentoUsuarioInscricao(models.Model):
     def __str__(self):
         return  '{}'.format(self.documento_usuario.titulo)
 
+    def get_nome_documento(self):
+        return self.documento.name.split('/')[1]
+
+    def get_status(self):
+        return STATUS_DOCUMENTO_REQUISITO_INSCRICAO[int(self.status)][1]
+
 
 class DocumentoRequisitoInscricao(models.Model):
     servico = models.ForeignKey('core.Servico', on_delete=models.CASCADE, null=True)

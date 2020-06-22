@@ -16,7 +16,10 @@ urlpatterns = [
     path('buscarCpfAjax', CoreAjax.buscarCpf, name='buscarCpfAjax'),
     path('buscarCnpjAjax', CoreAjax.buscarCnpj, name='buscarCnpjAjax'),
 
-    path('cancelarDocumentoAjax', CoreAjax.cancelar_documento, name='cancelarDocumentoAjax'),
+    path('cancelarDocumentoRequisitoAjax', CoreAjax.cancelar_documento_requisito, name='cancelarDocumentoRequisitoAjax'),
+    path('cancelarDocumentoUsuarioAjax', CoreAjax.cancelar_documento_usuario, name='cancelarDocumentoUsuarioAjax'),
 
     path('getBlocosCamposArquivosServicosAjax', CoreAjax.get_blocos_campos_arquivos_servicos, name='getBlocosCamposArquivosServicosAjax'),
+
+
 ]
